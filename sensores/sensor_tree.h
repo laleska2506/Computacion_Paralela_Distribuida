@@ -4,17 +4,18 @@
 #include <vector>
 
 class SensorTree {
-  public:
-    std::vector<double> sensor_data; // datos de los sensores en esta sub-estación
-    SensorTree* left;
-    SensorTree* right;
+ public:
+  std::vector<double>
+      sensor_data;  // datos de los sensores en esta sub-estación
+  SensorTree* left;
+  SensorTree* right;
 
-    SensorTree(const std::vector<double>&);
-    virtual double calculateMaxAverageInternal(SensorTree*) = 0;
-    virtual double calculateMaxAverage() = 0;
-    virtual void insertInternal(SensorTree*, const std::vector<double>&) = 0;
-    virtual void insert(const std::vector<double>&) = 0;
-    ~SensorTree();
+  SensorTree(const std::vector<double>&);
+  virtual double calculateMaxAverageInternal(SensorTree*) = 0;
+  virtual double calculateMaxAverage() = 0;
+  virtual void insertInternal(SensorTree*, const std::vector<double>&) = 0;
+  virtual void insert(const std::vector<double>&) = 0;
+  ~SensorTree();
 };
 
 #endif  // BASE_H

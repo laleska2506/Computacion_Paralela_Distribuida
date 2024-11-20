@@ -4,8 +4,7 @@
 #include "sensor_tree.h"
 
 class SequentialTree : public SensorTree {
-  public:
-
+ public:
   SequentialTree(const std::vector<double>&);
   double calculateMaxAverageInternal(SensorTree* node_ptr) override;
   double calculateMaxAverage() override;
