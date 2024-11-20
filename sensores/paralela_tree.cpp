@@ -1,6 +1,7 @@
 #include "paralela_tree.h"
 #include <omp.h>
 #include <algorithm>
+#include <mutex>
 #include <vector>
 
 ParalelaTree::ParalelaTree(const std::vector<double>& data)
@@ -9,19 +10,18 @@ ParalelaTree::ParalelaTree(const std::vector<double>& data)
 double ParalelaTree::calculateMaxAverage() {
   return calculateMaxAverageInternal(this);
 }
+std::mutex tree_mutex;
 
 double ParalelaTree::calculateMaxAverageInternal(SensorTree* node_ptr) {
   if (node_ptr == nullptr) return 0.0;
 
   // suma los datos del sensor en el nodo actual
+ // suma los datos del sensor en el nodo actual
   double sum = 0.0;
   int cont = 0;
-
-  // Paralelizamos el cálculo de la suma y el conteo de datos
-  #pragma omp parallel for reduction(+:sum, cont)
-  for (size_t i = 0; i < node_ptr->sensor_data.size(); i++) {
-    if (node_ptr->sensor_data[i] > 0.0) {
-      sum += node_ptr->sensor_data[i];
+  for(int value : node_ptr->sensor_data) {
+    if(value > 0.0) {
+      sum += value;
       cont += 1;
     }
   }
@@ -58,35 +58,17 @@ void ParalelaTree::insert(const std::vector<double>& data) {
 
 void ParalelaTree::insertInternal(SensorTree* node_ptr,
                                     const std::vector<double>& data) {
-  if (node_ptr == nullptr) {
-    #pragma omp critical
-    {
-      node_ptr = new ParalelaTree(data);
-    }
+  if(node_ptr == nullptr) {
+    node_ptr = new ParalelaTree(data);
     return;
-  } else if (node_ptr->left == nullptr) {
-    #pragma omp critical
-    {
-      node_ptr->left = new ParalelaTree(data);
-    }
+  } else if(node_ptr->left == nullptr) {
+    node_ptr->left = new ParalelaTree(data);
     return;
-  } else if (node_ptr->right == nullptr) {
-    #pragma omp critical
-    {
-      node_ptr->right = new ParalelaTree(data);
-    }
+  } else if(node_ptr->right == nullptr) {
+    node_ptr->right = new ParalelaTree(data);
     return;
   }
 
-  // Paralelizamos el recorrido de las ramas izquierda y derecha
-  #pragma omp task if (node_ptr->left != nullptr)
-  {
-    insertInternal(node_ptr->left, data);
-  }
-  #pragma omp task if (node_ptr->right != nullptr)
-  {
-    insertInternal(node_ptr->right, data);
-  }
-
-  #pragma omp taskwait
+  if(node_ptr->left != nullptr) insertInternal(node_ptr->left, data);
+  if(node_ptr->right != nullptr) insertInternal(node_ptr->right, data);
 }
