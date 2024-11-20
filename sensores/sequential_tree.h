@@ -5,6 +5,7 @@
 
 class SequentialTree : public SensorTree {
  public:
+  int contadorEstaciones;
   SequentialTree(const std::vector<double>&);
   double calculateMaxAverageInternal(SensorTree* node_ptr) override;
   double calculateMaxAverage() override;

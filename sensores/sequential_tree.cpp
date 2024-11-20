@@ -1,7 +1,7 @@
 #include "sequential_tree.h"
 
 SequentialTree::SequentialTree(const std::vector<double>& data)
-    : SensorTree(data) {}
+    : SensorTree(data), contadorEstaciones(1) {}
 
 double SequentialTree::calculateMaxAverage() {
   return calculateMaxAverageInternal(this);
@@ -33,6 +33,7 @@ double SequentialTree::calculateMaxAverageInternal(SensorTree* node_ptr) {
 
 void SequentialTree::insert(const std::vector<double>& data) {
   insertInternal(this, data);
+  contadorEstaciones++;
 }
 
 void SequentialTree::insertInternal(SensorTree* node_ptr,

@@ -5,8 +5,8 @@
 
 class SensorTree {
  public:
-  std::vector<double>
-      sensor_data;  // datos de los sensores en esta sub-estación
+  // datos de los sensores en esta sub-estación
+  std::vector<double> sensor_data;
   SensorTree* left;
   SensorTree* right;
 
