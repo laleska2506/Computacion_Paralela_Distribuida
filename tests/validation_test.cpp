@@ -14,6 +14,17 @@ TEST(SequentialTest, pruebaSimple) {
   delete arbol_datos;
 }
 
+TEST(SequentialTest, pruebaInsert) {
+  SequentialTree* arbol_datos = new SequentialTree({18, 0, 17});
+  arbol_datos->insert({25, 20});
+  arbol_datos->insert({20, 22});
+  arbol_datos->insert({23});
+  arbol_datos->insert({17, 19, 0});
+
+  EXPECT_EQ(23, arbol_datos->calculateMaxAverage());
+  delete arbol_datos;
+}
+
 TEST(SequentialTest, pruebaVacio) {
   SequentialTree* arbol_vacio = new SequentialTree({});
   EXPECT_EQ(0.0, arbol_vacio->calculateMaxAverage());
